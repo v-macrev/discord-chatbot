@@ -30,10 +30,27 @@ def send_message(message):
     bot_response = response.choices[0].text.strip()
     return bot_response
 
-# Test the chatbot by sending it a message and printing its response
-message = input("Say something to the chatbot: ")
-response = send_message(message)
-print(response)
+# Create a client object to connect to Discord
+client = discord.Client()
+
+# Add an event listener for the "ready" event, which is called when the bot is ready to start receiving messages
+@client.event
+async def on_ready():
+    print(f"Bot is online and logged in as {client.user}")
+
+# Add an event listener for the "message" event, which is called when a message is received
+@client.event
+async def on_message(message):
+    # Ignore messages sent by the bot
+    if message.author == client.user:
+        return
+
+    # Call the send_message() function to get a response from the chatbot
+    response = send_message(message.content)
+
+    # Send the bot's response back to the channel
+    await message.channel.send(response)
 
 # Run the bot using your Discord bot token
 client.run("MTA5NTgwOTQ0Mjk0OTM3MDAwNg.Gg6Pr7.U72226WxS_1_b-qC_6YtJ1Uv0fP-JsUf0p_mKE")
+
